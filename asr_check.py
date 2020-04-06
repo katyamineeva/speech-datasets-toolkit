@@ -97,13 +97,7 @@ def find_errors(distortions_path, errors_json):
 
 
 def main():
-    filelist_json = os.path.join(cfg.filelists_folder, "all_v2.json") #ignoreline
-    distortions_json = os.path.join(cfg.filelists_folder, "tests_distortion.json") #ignoreline
-    part_distortions_json = os.path.join(cfg.filelists_folder, "tests_distortion_part.json") #ignoreline
-    errors_json = os.path.join(cfg.filelists_folder, "errors.json") #ignoreline
 
-    # find_tests_distortion_in_texts(cfg.amai_path, filelist_json, distortions_json) #ignoreline
-    find_errors(part_distortions_json, errors_json) #ignoreline
 
     pass
 

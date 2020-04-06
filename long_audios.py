@@ -63,22 +63,12 @@ def wavs_in_one_folder(filelist_json, dataset_path, out_folder):
 
 
 def main():
-    all_v3_json = os.path.join(cfg.filelists_folder, "all_v3.json")  #ignoreline
-    long_wavs_list_v2_json = os.path.join(cfg.old_filelists_folder, "long_list_v2.json")  #ignoreline
-    long_filelist_v1_json = os.path.join(cfg.old_filelists_folder, "long_filelist_v1.json") #ignoreline
-    long_filelist_v2_json = os.path.join(cfg.old_filelists_folder, "long_filelist_v2.json") #ignoreline
-    long_wavs_v2_folder = os.path.join(cfg.amai_path, "long_with_texts_v2") #ignoreline
-    new_filelist_txt = os.path.join(long_wavs_v2_folder, "amai_long_with_texts_v2.txt") #ignoreline
 
     long_wavnames_to_list(cfg.amai_path, long_wavs_list_v2_json) #ignoreline    
-    filelist_long_to_json(all_v3_json, long_wavs_list_v2_json, long_filelist_v2_json, #ignoreline
-                          exclude_json=long_filelist_v1_json) #ignoreline
 
     # merge long wavs in one folder
-    wavs_in_one_folder(long_filelist_v2_json, cfg.amai_path, long_wavs_v2_folder) #ignoreline
 
     # create filelist with new names
-    convert_names_filelist_json_to_txt(long_filelist_v2_json, new_filelist_txt) #ignoreline
 
 
 if __name__ == "__main__":

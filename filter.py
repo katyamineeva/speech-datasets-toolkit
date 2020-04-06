@@ -43,11 +43,7 @@ def filter_filelist(filelist_json, wavs_duration, filtered_filelist_json):
 
 
 def main():
-    all_v3_json = os.path.join(cfg.filelists_folder, "all_v3.json")  #ignoreline
-    wavs_duration_json = os.path.join(cfg.filelists_folder, "wavs_duration.json")  #ignoreline
-    all_filtered_v3_json = os.path.join(cfg.filelists_folder, "all_filtered_v3.json")  #ignoreline
 
-    filter_filelist(all_v3_json, wavs_duration_json, all_filtered_v3_json)  #ignoreline
     pass
 
 

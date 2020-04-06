@@ -136,8 +136,7 @@ def count_texts_wavs(dataset_path, filelist_json):
 
 
 def main():
-    filelist_all_v3_json = os.path.join(cfg.filelists_folder, "all_v3.json") #ignorelineS
-    count_texts_wavs(cfg.amai_path, filelist_all_v3_json) #ignoreline
+    filelist_txt_to_json(cfg.filelist_ruslan_txt, cfg.filelist_ruslan_json)
     pass
 
 

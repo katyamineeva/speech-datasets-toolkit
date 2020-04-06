@@ -1,0 +1,5 @@
+*.wav
+config.py
+/.idea
+__pycache__
+amai
