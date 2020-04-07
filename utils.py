@@ -136,7 +136,6 @@ def count_texts_wavs(dataset_path, filelist_json):
 
 
 def main():
-    filelist_txt_to_json(cfg.filelist_ruslan_txt, cfg.filelist_ruslan_json)
     pass
 
 

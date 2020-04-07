@@ -1,22 +1,21 @@
 import os
+import soundfile
 
 import config as cfg
 from utils import load_json, dump_json
 
 
-def get_wavs_duration(dataset_path, out_json):
+def get_wavs_duration(wavs_path, out_json):
     wavs_duration = {}
-    for foldername in os.listdir(os.path.join(dataset_path, "dataset")):
-        for filename in os.listdir(os.path.join(dataset_path, "dataset", foldername, "wavs")):
-            if filename.split(".")[-1] == "wav":
-                wavname_original = os.path.join("dataset", foldername, "wavs", filename)
-                wavpath = os.path.join(dataset_path, "dataset", foldername, "wavs", filename)
-
-                audio, sample_rate = soundfile.read(wavpath)
-                wavs_duration[wavname_original] = audio.shape[0] / sample_rate
+    for i, filename in enumerate(os.listdir(wavs_path)):
+        if filename.split(".")[-1] == "wav":
+            audio, sample_rate = soundfile.read(os.path.join(wavs_path, filename))
+            wavs_duration[filename] = audio.shape[0] / sample_rate
+            print("\rProccesed %d audios" % i, end="")
 
     dump_json(wavs_duration, out_json)
-
+    print()
+    
     return wavs_duration
 
 
