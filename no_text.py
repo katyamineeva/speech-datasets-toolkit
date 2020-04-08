@@ -28,10 +28,7 @@ def find_no_texts(filelist_json, dataset_path, out_txt):
 
 
 def main():
-    filelist_json = os.path.join(cfg.filelists_folder, "all_v3.json") #ignoreline
-    no_texts_txt = os.path.join(cfg.filelists_folder, "txts", "no_texts_v3.txt") #ignoreline
 
-    find_no_texts(filelist_json, cfg.amai_path, no_texts_txt) #ignoreline
 
 
 if __name__ == "__main__":

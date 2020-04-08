@@ -30,11 +30,7 @@ def sample_questions_non_questions_filelist(filelist_json, out_json):
 
 def main():
     filelist_json = os.path.join(cfg.filelists_folder, "all_filtered_v3.json")
-    questions_non_questions_json = os.path.join(cfg.filelists_folder, "questions_non_questions.json") #ignoreline
-    questions_non_questions_folder = os.path.join(cfg.filelists_folder, "questions_non_questions") #ignoreline
 
-    sample_questions_non_questions_filelist(filelist_json, questions_non_questions_json) #ignoreline
-    train_val_split_json_to_txt(questions_non_questions_json, questions_non_questions_folder) #ignoreline
 
 
 if __name__ == "__main__":

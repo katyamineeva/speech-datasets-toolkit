@@ -8,7 +8,7 @@ from utils import load_json, dump_json
 
 
 def recognise_speech(audio_path):
-    payload = {'model_type': 'ASR', 'filename': cnf.asr_filename}
+    payload = {'model_type': 'ASR', 'filename': cfg.asr_filename}
     files = [('audio_blob', open(audio_path, 'rb'))]
 
     headers = {'Authorization': cfg.asr_autorization_str}
@@ -57,26 +57,33 @@ def relative_levenstain(s1, s2):
     return levenshtein(s1, s2) / max(len(s1), len(s2))
 
 
-def find_tests_distortion_in_texts(dataset_path, filelist_json, out_json):
+def find_texts_distortion_in_texts(dataset_path, filelist_json, out_json, start_from_scratch=False):
     wavname_to_text = load_json(filelist_json)
 
-    tests_distortion = {}
+    if os.path.exists(out_json) and not start_from_scratch:
+        texts_distortion = load_json(out_json)
+    else:
+        texts_distortion = {}
+
     cnt = 0
     max_cnt = len(wavname_to_text)
+
     for wavname in wavname_to_text:
         cnt += 1
         if cnt > max_cnt:
             break
-        wav_path = os.path.join(dataset_path, wavname)
-        recognised_text = recognise_speech(wav_path)
-        dist = relative_levenstain(wavname_to_text[wavname], recognised_text)
-        tests_distortion[wavname] = {"original" : wavname_to_text[wavname],
-                                     "original_unified" : unify_text(wavname_to_text[wavname]),
-                                     "recognised" : recognised_text,
-                                     "relative_levenshtein" : dist}
 
+        if start_from_scratch or wavname not in texts_distortion:
+            wav_path = os.path.join(dataset_path, wavname)
+            recognised_text = recognise_speech(wav_path)
+            dist = relative_levenstain(wavname_to_text[wavname], recognised_text)
+            texts_distortion[wavname] = {"original" : wavname_to_text[wavname],
+                                         "original_unified" : unify_text(wavname_to_text[wavname]),
+                                         "recognised" : recognised_text,
+                                         "relative_levenshtein" : dist}
+
+            dump_json(texts_distortion, out_json)
         print("\r%.2f%% completed" % (cnt / max_cnt * 100), end='')
-        dump_json(tests_distortion, out_json)
     print("\rdone!            ")
 
 
@@ -97,13 +104,7 @@ def find_errors(distortions_path, errors_json):
 
 
 def main():
-    filelist_json = os.path.join(cfg.filelists_folder, "all_v2.json") #ignoreline
-    distortions_json = os.path.join(cfg.filelists_folder, "tests_distortion.json") #ignoreline
-    part_distortions_json = os.path.join(cfg.filelists_folder, "tests_distortion_part.json") #ignoreline
-    errors_json = os.path.join(cfg.filelists_folder, "errors.json") #ignoreline
 
-    # find_tests_distortion_in_texts(cfg.amai_path, filelist_json, distortions_json) #ignoreline
-    find_errors(part_distortions_json, errors_json) #ignoreline
 
     pass
 
