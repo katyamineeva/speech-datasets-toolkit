@@ -153,8 +153,6 @@ def ensure_exactly_one_space_after_punctuation(filelist_json, out_json):
 
 
 def main():
-    tmp_json = os.path.join(cfg.filelists_folder, "tmp.json")
-    ensure_exactly_one_space_after_punctuation(cfg.all_v3_json, cfg.all_v3_json)
 
     pass
 

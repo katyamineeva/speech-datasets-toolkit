@@ -119,18 +119,8 @@ def filelist_find_errors_in_stress(filelist_json, out_json):
 
 
 def main():
-    # no_stress_json = os.path.join(cfg.filelists_folder, "no_stress.json")  # ignoreline
-    # no_stress_folder = os.path.join(cfg.amai_path, "no_stress")  # ignoreline
-    # filelist_in_no_stress_folder_txt = os.path.join(no_stress_folder, "no_stress.txt")  # ignoreline
     #
-    # get_no_stress_filelist(all_v3_json, no_stress_json)  # ignoreline
-    # wavs_in_one_folder(all_v3_json, cfg.amai_path, no_stress_folder)  # ignoreline
-    # convert_names_filelist_json_to_txt(no_stress_json, filelist_in_no_stress_folder_txt)  # ignoreline
 
-    errors_in_stress_json = os.path.join(cfg.filelists_folder, "errors_in_stress.json") # ignoreline
-    filelist_uppercase_stress_json = os.path.join(cfg.filelists_folder, "uppercase_stress_part.json") # ignoreline
-    filelist_uppercase_to_plus(cfg.all_v3_json, filelist_uppercase_stress_json) # ignoreline
-    filelist_find_errors_in_stress(cfg.all_v3_json, errors_in_stress_json) # ignoreline
     pass
 
 

@@ -121,21 +121,9 @@ def find_errors(distortions_path, errors_json):
 
 
 def main():
-    # filelist_json = os.path.join(cfg.filelists_folder, "all_v3.json") # ignoreline
-    # distortions_json = os.path.join(cfg.filelists_folder, "texts_distortion.json") # ignoreline
-    # # part_distortions_json = os.path.join(cfg.filelists_folder, "texts_distortion_part.json") # ignoreline
-    # recognition_errors_json = os.path.join(cfg.filelists_folder, "recognition_errors.json") # ignoreline
     #
-    # find_texts_distortion_in_texts(cfg.amai_path, # ignoreline
-    #                                filelist_json, # ignoreline
-    #                                distortions_json, # ignoreline
-    #                                recognition_errors_json) # ignoreline
     #
-    # # errors_json = os.path.join(cfg.filelists_folder, "errors.json") # ignoreline
-    # # find_errors(distortions_json, errors_json) # ignoreline
 
-    print(recognise_speech("/mnt/sdb/datasets/amai/dataset/100/wavs/1.wav"))
-    # print(os.path.exists("/mnt/sdb/datasets/amai/dataset/UMBRELLA_processed/wavs/148.wav"))
     pass
 
 
