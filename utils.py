@@ -135,8 +135,27 @@ def count_texts_wavs(dataset_path, filelist_json):
         .format(cnt_audios,cnt_texts, cnt_audios - cnt_texts))
 
 
+def ensure_exactly_one_space_after_punctuation(filelist_json, out_json):
+    wavname_to_text = load_json(filelist_json)
+
+    for wavname in wavname_to_text:
+        text = wavname_to_text[wavname]
+        text = text.replace(",", ", ")
+        text = text.replace("?", "? ")
+        text = text.replace("!", "! ")
+        text = text.replace("...", "... ")
+        for s in cfg.russian_letters:
+            text = text.replace("." + s, ". " + s)
+
+        wavname_to_text[wavname] = " ".join(text.split())
+
+    dump_json(wavname_to_text, out_json)
+
+
 def main():
-    filelist_all_v3_json = os.path.join(cfg.filelists_folder, "all_v3.json") #ignorelineS
+    tmp_json = os.path.join(cfg.filelists_folder, "tmp.json")
+    ensure_exactly_one_space_after_punctuation(cfg.all_v3_json, cfg.all_v3_json)
+
     pass
 
 

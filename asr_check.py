@@ -57,14 +57,19 @@ def relative_levenstain(s1, s2):
     return levenshtein(s1, s2) / max(len(s1), len(s2))
 
 
-def find_texts_distortion_in_texts(dataset_path, filelist_json, out_json, start_from_scratch=False):
+def find_texts_distortion_in_texts(dataset_path,
+                                   filelist_json,
+                                   texts_defects_json,
+                                   recoginition_errors_json,
+                                   start_from_scratch=False):
     wavname_to_text = load_json(filelist_json)
 
-    if os.path.exists(out_json) and not start_from_scratch:
-        texts_distortion = load_json(out_json)
+    if os.path.exists(texts_defects_json) and not start_from_scratch:
+        texts_distortion = load_json(texts_defects_json)
     else:
         texts_distortion = {}
 
+    recognition_errors = []
     cnt = 0
     max_cnt = len(wavname_to_text)
 
@@ -75,14 +80,26 @@ def find_texts_distortion_in_texts(dataset_path, filelist_json, out_json, start_
 
         if start_from_scratch or wavname not in texts_distortion:
             wav_path = os.path.join(dataset_path, wavname)
-            recognised_text = recognise_speech(wav_path)
-            dist = relative_levenstain(wavname_to_text[wavname], recognised_text)
-            texts_distortion[wavname] = {"original" : wavname_to_text[wavname],
-                                         "original_unified" : unify_text(wavname_to_text[wavname]),
-                                         "recognised" : recognised_text,
-                                         "relative_levenshtein" : dist}
+            recognised_successfully = False
+            try:
+                recognised_text = recognise_speech(wav_path)
+                recognised_successfully = True
+                dist = relative_levenstain(wavname_to_text[wavname], recognised_text)
+                texts_distortion[wavname] = {"original" : wavname_to_text[wavname],
+                                             "original_unified" : unify_text(wavname_to_text[wavname]),
+                                             "recognised" : recognised_text,
+                                             "relative_levenshtein" : dist}
+                dump_json(texts_distortion, texts_defects_json)
+            except:
+                if recognised_successfully:
+                    ret_val = recognised_text
+                else:
+                    ret_val = "fail during recognition"
+                recognition_errors.append((wav_path, ret_val))
+                dump_json(recognition_errors, recoginition_errors_json)
 
-            dump_json(texts_distortion, out_json)
+
+
         print("\r%.2f%% completed" % (cnt / max_cnt * 100), end='')
     print("\rdone!            ")
 
@@ -104,8 +121,21 @@ def find_errors(distortions_path, errors_json):
 
 
 def main():
+    # filelist_json = os.path.join(cfg.filelists_folder, "all_v3.json") # ignoreline
+    # distortions_json = os.path.join(cfg.filelists_folder, "texts_distortion.json") # ignoreline
+    # # part_distortions_json = os.path.join(cfg.filelists_folder, "texts_distortion_part.json") # ignoreline
+    # recognition_errors_json = os.path.join(cfg.filelists_folder, "recognition_errors.json") # ignoreline
+    #
+    # find_texts_distortion_in_texts(cfg.amai_path, # ignoreline
+    #                                filelist_json, # ignoreline
+    #                                distortions_json, # ignoreline
+    #                                recognition_errors_json) # ignoreline
+    #
+    # # errors_json = os.path.join(cfg.filelists_folder, "errors.json") # ignoreline
+    # # find_errors(distortions_json, errors_json) # ignoreline
 
-
+    print(recognise_speech("/mnt/sdb/datasets/amai/dataset/100/wavs/1.wav"))
+    # print(os.path.exists("/mnt/sdb/datasets/amai/dataset/UMBRELLA_processed/wavs/148.wav"))
     pass
 
 
