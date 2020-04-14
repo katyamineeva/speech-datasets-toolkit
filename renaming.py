@@ -65,7 +65,22 @@ def convert_names_filelist_txt_to_json(filelist_txt, out_json, wavnames_correspo
     dump_json(converted_filelist, out_json)
 
 
+def wav_id_to_wavname_ruslan(wav_id):
+    return wav_id + "_RUSLAN.wav"
+
+
+def rename_filelist(filelist_json, out_json):
+    wav_id_to_text = load_json(filelist_json)
+    wavname_to_text = {}
+    for wav_id in wav_id_to_text:
+        wavname_to_text[wav_id_to_wavname_ruslan(wav_id)] = wav_id_to_text[wav_id]
+
+    dump_json(wavname_to_text, out_json)
+
+
 def main():
+    out_json = os.path.join(cfg.ruslan_path, "all_v4_streed.json")
+    rename_filelist(cfg.all_streesed_v4_json, out_json)
     pass
 
 

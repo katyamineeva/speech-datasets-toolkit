@@ -42,7 +42,8 @@ def filter_filelist(filelist_json, wavs_duration, filtered_filelist_json):
 
 
 def main():
-
+    wavs_duration_json = os.path.join(cfg.ruslan_path, "wavs_duration.json")
+    filter_filelist(cfg.all_streesed_v4_json, wavs_duration_json, cfg.all_streesed_filtered_v4_json)
     pass
 
 
