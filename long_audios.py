@@ -3,7 +3,7 @@ import soundfile
 import shutil
 
 import config as cfg
-from utils import load_json, dump_json
+from utils import load_json, dump_json, merge_filelists_txt_to_json
 from renaming import convert_filename, convert_names_filelist_json_to_txt
 
 
@@ -62,19 +62,59 @@ def wavs_in_one_folder(filelist_json, dataset_path, out_folder):
         shutil.copyfile(src_path, dst_path)
 
 
+def replace_long_with_chopped_in_json(filelist_json, chopped_json, out_json):
+    wavname_to_text = load_json(filelist_json)
+    chopped = load_json(chopped_json)
+    result = {}
+
+    wavnames_before_chopping = [convert_filename(wavname) for wavname in wavname_to_text]
+    chopped_wavnames_before_chopping = set()
+    chopped_wavnames_after_chopping = []
+
+    for wavname in chopped:
+        if wavname not in wavnames_before_chopping:
+            chopped_wavnames_before_chopping.add("_".join(wavname.split("_")[ : -1]) + ".wav")
+            chopped_wavnames_after_chopping.append(wavname)
+
+    for wavname in wavname_to_text:
+        if convert_filename(wavname) not in chopped_wavnames_before_chopping:
+            result[wavname] = wavname_to_text[wavname]
+
+    for wavname in chopped:
+        if wavname in chopped_wavnames_after_chopping:
+            result[wavname] = chopped[wavname]
+
+    print(len(chopped_wavnames_before_chopping), "wavs were really chopped")
+    dump_json(result, out_json)
+
+
+def chopped_wavname_to_wavpath(filelist_json, chopped_json):
+    original_filelist = load_json(filelist_json)
+    chopped_unchopped_filelist = load_json(chopped_json)
+    unchopped_wavnames = [convert_filename(wavname) for wavname in original_filelist]
+
+    chopped_filelist = {}
+
+    for wavname in chopped_unchopped_filelist:
+        if wavname not in unchopped_wavnames:
+            wavpath = os.path.join("dataset", "chopped", "wavs", wavname)
+            chopped_filelist[wavpath] = chopped_unchopped_filelist[wavname]
+
+    dump_json(chopped_filelist, chopped_json)
+
+
 def main():
-
-
-    # long_wavnames_to_list(cfg.amai_path, long_wavs_list_v2_json) #ignoreline    
-
-
-
-
-
-
     # merge long wavs in one folder
 
     # create filelist with new names
+    chopped_filelists_folder = os.path.join(cfg.filelists_folder, "txts", "chopped_long")
+    chopped_json = os.path.join(cfg.filelists_folder, "chopped.json")
+    all_v4_with_chopped_long_json = os.path.join(cfg.filelists_folder, "all_v4_with_chopped_long.json")
+
+    merge_filelists_txt_to_json(chopped_filelists_folder, chopped_json)
+    replace_long_with_chopped_in_json(cfg.all_v3_json, chopped_json, all_v4_with_chopped_long_json)
+    chopped_wavname_to_wavpath(cfg.all_v3_json, chopped_json)
+    pass
 
 
 if __name__ == "__main__":

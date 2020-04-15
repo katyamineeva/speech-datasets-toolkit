@@ -28,7 +28,7 @@ def find_no_texts(filelist_json, dataset_path, out_txt):
 
 
 def main():
-
+    pass
 
 
 if __name__ == "__main__":

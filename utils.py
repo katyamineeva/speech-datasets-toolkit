@@ -33,7 +33,7 @@ def merge_dicts(dicts):
 
     if cnt_initial != cnt_result:
         print("Warning! There was a conflict while merging dictionaries:\
-              {} keys berfore merge resulted in {} keys".format(src_folder, cnt_initial, cnt_result))
+              {} keys berfore merge resulted in {} keys".format(cnt_initial, cnt_result))
 
     return result
 
@@ -93,6 +93,11 @@ def merge_filelists_txt_to_json(src_folder, out_json):
     dump_json(merged_filelist_dict, out_json)
 
     return merged_filelist_dict
+
+
+def merge_filelists_jsons_to_json(json_filelists_list, out_json):
+    result = merge_dicts([load_json(filelist_json) for filelist_json in json_filelists_list])
+    dump_json(result, out_json)
 
 
 def train_val_split_json_to_txt(filelist_json, dst_folder, val_fraction=0.2):
