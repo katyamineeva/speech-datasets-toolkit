@@ -121,7 +121,7 @@ def find_errors(distortions_path, errors_json, exclude_json=None):
         if len(distortions[wavname]["original"]) > 10 and wavname not in exclude\
            and distortions[wavname]["relative_levenshtein"] > cfg.levenshtein_dist_threshold:
             errors[wavname] = distortions[wavname]
-            del errors[wavname]["original"]
+            del errors[wavname]["original_unified"]
 
     print("{} texts out of {} differ from recognised ones by {}% or more"\
            .format(len(errors), len(distortions), int(cfg.levenshtein_dist_threshold * 100)))
@@ -129,42 +129,53 @@ def find_errors(distortions_path, errors_json, exclude_json=None):
     dump_json(errors, errors_json)
 
 
-def correct_confirmed_errors_in_filelist(confirmed_errors_json, out_json):
+def correct_confirmed_errors_in_filelist(confirmed_errors_json):
     errors = load_json(confirmed_errors_json)
     corrected = {}
     for wavname in errors:
         corrected[wavname] = errors[wavname]["ground_truth"]
 
-    dump_json(corrected, out_json)
+    dump_json(corrected, confirmed_errors_json)
 
 
 def main():
-    texts_distortion_json = os.path.join(cfg.filelists_folder, "texts_distortion.json")
-    recognition_errors_json = os.path.join(cfg.filelists_folder, "recognition_errors.json")
-    # exclude_json = os.path.join(cfg.filelists_folder, "errors_asr_vs_texts_v2.json")
-    # errors_asr_vs_texts_v3_json = os.path.join(cfg.filelists_folder, "errors_asr_vs_texts_v3.json")
-
-    # recognise_filelist(cfg.amai_path, cfg.all_v3_json, texts_distortion_json, recognition_errors_json)
-    # find_errors(texts_distortion_json, errors_asr_vs_texts_v3_json, exclude_json=exclude_json)
-
-    # find_errors(texts_distortion_json, errors_asr_vs_texts_v3_json)
-    wavs_asr_vs_texts_v3_folder = os.path.join(cfg.amai_path, "wavs_errors_asr_vs_texts_v3")
-    # wavs_in_one_folder(errors_asr_vs_texts_v3_json, cfg.amai_path, wavs_asr_vs_texts_v3_folder)
-
-    confirmed_errors_json = os.path.join(cfg.filelists_folder, "confirmed_errors.json")
-    corrected_confirmed_errors_json = os.path.join(cfg.filelists_folder, "corrected_confirmed_errors.json")
-    all_v3_asr_corrected_json = os.path.join(cfg.filelists_folder, "all_v3_asr_corrected.json")
-
-    # confirmed_errors_wavs_folder = os.path.join(cfg.amai_path, "confirmed_errors_wavs")
-    # wavs_in_one_folder(confirmed_errors_json, cfg.amai_path, confirmed_errors_wavs_folder)
-
-    # correct_confirmed_errors_in_filelist(confirmed_errors_json, corrected_confirmed_errors_json)
-    # merge_filelists_jsons_to_json([cfg.all_v3_json, corrected_confirmed_errors_json], all_v3_asr_corrected_json)
+    # texts_distortion_json = os.path.join(cfg.filelists_folder, "texts_distortion.json")
+    # recognition_errors_json = os.path.join(cfg.filelists_folder, "recognition_errors.json")
+    # # exclude_json = os.path.join(cfg.filelists_folder, "errors_asr_vs_texts_v2.json")
+    # # errors_asr_vs_texts_v3_json = os.path.join(cfg.filelists_folder, "errors_asr_vs_texts_v3.json")
+    #
+    # # recognise_filelist(cfg.amai_path, cfg.all_v3_json, texts_distortion_json, recognition_errors_json)
+    # # find_errors(texts_distortion_json, errors_asr_vs_texts_v3_json, exclude_json=exclude_json)
+    #
+    # # find_errors(texts_distortion_json, errors_asr_vs_texts_v3_json)
+    # wavs_asr_vs_texts_v3_folder = os.path.join(cfg.amai_path, "wavs_errors_asr_vs_texts_v3")
+    # # wavs_in_one_folder(errors_asr_vs_texts_v3_json, cfg.amai_path, wavs_asr_vs_texts_v3_folder)
+    #
+    # confirmed_errors_json = os.path.join(cfg.filelists_folder, "confirmed_errors.json")
+    # # corrected_confirmed_errors_json = os.path.join(cfg.filelists_folder, "corrected_confirmed_errors.json")
+    # all_v3_asr_corrected_json = os.path.join(cfg.filelists_folder, "all_v3_asr_corrected.json")
+    #
+    # # confirmed_errors_wavs_folder = os.path.join(cfg.amai_path, "confirmed_errors_wavs")
+    # # wavs_in_one_folder(confirmed_errors_json, cfg.amai_path, confirmed_errors_wavs_folder)
+    #
+    # # correct_confirmed_errors_in_filelist(confirmed_errors_json, corrected_confirmed_errors_json)
+    # # merge_filelists_jsons_to_json([cfg.all_v3_json, corrected_confirmed_errors_json], all_v3_asr_corrected_json)
     # all_v4_json = os.path.join(cfg.filelists_folder, "all_v4_with_chopped_long.json")
-    chopped_json = os.path.join(cfg.filelists_folder, "chopped.json")
-    chopped_distiortions = os.path.join(cfg.filelists_folder, "chopped_distortions.json")
-
-    recognise_filelist(cfg.amai_path, chopped_json, chopped_distiortions, recognition_errors_json)
+    # chopped_json = os.path.join(cfg.filelists_folder, "chopped.json")
+    # chopped_distiortions = os.path.join(cfg.filelists_folder, "chopped_distortions.json")
+    # errors_asr_vs_texts_chopped_json = os.path.join(cfg.filelists_folder, "errors_asr_vs_texts_chopped.json")
+    #
+    # wavs_asr_vs_texts_chopped_folder = os.path.join(cfg.amai_path, "wavs_errors_asr_vs_texts_chopped")
+    # # recognise_filelist(cfg.amai_path, chopped_json, chopped_distiortions, recognition_errors_json)
+    # # merge_filelists_jsons_to_json([texts_distortion_json, chopped_distiortions], texts_distortion_json)
+    # # find_errors(chopped_distiortions, errors_asr_vs_texts_chopped_json)
+    # # wavs_in_one_folder(errors_asr_vs_texts_chopped_json, cfg.amai_path, wavs_asr_vs_texts_chopped_folder, rename=False)
+    # confirmed_errors_json = os.path.join(cfg.filelists_folder, "chopped_corrected_confirmed_errors.json")
+    all_v4_with_chopped_json = os.path.join(cfg.filelists_folder, "all_v4_with_chopped.json")
+    chopped_corrected_confirmed_errors_json = os.path.join(cfg.filelists_folder, "chopped_corrected_confirmed_errors.json")
+    all_v4_with_chopped_asr_checked_json = os.path.join(cfg.filelists_folder, "all_v4_with_chopped_asr_checked.json")
+    merge_filelists_jsons_to_json([all_v4_with_chopped_json, chopped_corrected_confirmed_errors_json],
+                                  all_v4_with_chopped_asr_checked_json)
     pass
 
 

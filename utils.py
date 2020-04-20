@@ -32,8 +32,10 @@ def merge_dicts(dicts):
     cnt_result = len(result)
 
     if cnt_initial != cnt_result:
-        print("Warning! There was a conflict while merging dictionaries:\
-              {} keys berfore merge resulted in {} keys".format(cnt_initial, cnt_result))
+        print("Warning! There was a conflict while merging dictionaries")
+        print("%d keys berfore merge resulted in %d keys, the delta is %d" % (cnt_initial,
+                                                                              cnt_result,
+                                                                              cnt_initial - cnt_result))
 
     return result
 
@@ -47,7 +49,7 @@ def filelist_txt_to_dict(filelist_txt):
             wavname, text = line.split("|")
             wavname_to_text[wavname] = text
 
-    print(len(wavname_to_text), "found in", filelist_txt)
+    print(len(wavname_to_text), "found in", os.path.basename(filelist_txt))
     return wavname_to_text
 
 
@@ -140,6 +142,37 @@ def count_texts_wavs(dataset_path, filelist_json):
         .format(cnt_audios,cnt_texts, cnt_audios - cnt_texts))
 
 
+def get_wavs_duration(dataset_path, out_json, start_from_scratch=False):
+    if os.path.exists(out_json):
+        wavs_duration = load_json(out_json)
+    else:
+        wavs_duration = {}
+
+    for foldername in os.listdir(os.path.join(dataset_path, "dataset")):
+        for filename in os.listdir(os.path.join(dataset_path, "dataset", foldername, "wavs")):
+            if filename.split(".")[-1] == "wav":
+                wavname_original = os.path.join("dataset", foldername, "wavs", filename)
+                if wavname_original not in wavs_duration:
+                    wavpath = os.path.join(dataset_path, "dataset", foldername, "wavs", filename)
+
+                    audio, sample_rate = soundfile.read(wavpath)
+                    wavs_duration[wavname_original] = audio.shape[0] / sample_rate
+
+    dump_json(wavs_duration, out_json)
+
+    return wavs_duration
+
+
+def count_filelist_duration(filelist_json, wavs_duration_json):
+    duration = load_json(wavs_duration_json)
+    total_duration = 0
+    for wavname in load_json(filelist_json):
+        total_duration += duration[wavname]
+
+    total_duration /= 60 * 60
+    print("\nTolal duration of %s is %.2f hours\n" % (os.path.basename(filelist_json), total_duration))
+
+
 def ensure_exactly_one_space_after_punctuation(filelist_json, out_json):
     wavname_to_text = load_json(filelist_json)
 
@@ -157,8 +190,35 @@ def ensure_exactly_one_space_after_punctuation(filelist_json, out_json):
     dump_json(wavname_to_text, out_json)
 
 
-def main():
+def dump_texts_only(filelist_json, out_json):
+    dump_json(list(load_json(filelist_json).values()), out_json)
 
+
+def remove_wavnames_which_not_exist(filelist_json, dataset_path, out_json):
+    print("\n" + "=" * 15 + " Removing non existing wavnames from filelist " + "=" * 15)
+    print("Processing", os.path.basename(filelist_json), "\n")
+    filelist = load_json(filelist_json)
+    result = {}
+    for wavname in filelist:
+        if os.path.exists(os.path.join(dataset_path, wavname)):
+            result[wavname] = filelist[wavname]
+        else:
+            print("Removed:", wavname)
+
+    print("\nRemoved %d wavnames in total, %d left" % (len(filelist) - len(result), len(result)))
+    print("=" * 76)
+    dump_json(result, out_json)
+
+
+def main():
+    # filelist_json = os.path.join(cfg.filelists_folder, "stress_part_plus_sign.json")
+    # out_json = os.path.join(cfg.filelists_folder, "amai_stressed_texts_only.json")
+    # all_v4 = os.path.join(cfg.filelists_folder, "all_v4_with_chopped_long.json")
+    # all_asr_checked_v4 = os.path.join(cfg.filelists_folder, "all_v4_with_chopped_asr_checked.json")
+    # # dump_texts_only(filelist_json, out_json)
+    # remove_wavnames_which_not_exist(all_asr_checked_v4, cfg.amai_path, all_asr_checked_v4)
+    chopped_json = os.path.join(cfg.filelists_folder, "chopped.json")
+    count_filelist_duration(chopped_json, cfg.wavs_duration_json)
     pass
 
 

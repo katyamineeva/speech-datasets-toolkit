@@ -51,12 +51,16 @@ def word_uppercase_to_plus(word):
     uppercase_vowels_count = sum(map(word.count, cfg.vowels_upper))
     uppercase_vowels_indices = [ind for ind, s in enumerate(word) if s in cfg.vowels_upper]
 
+    if word.lower() in cfg.known_stresses:
+        return cfg.known_stresses[word.lower()]
+
     if "-" in word:
         modified_subwords = []
         for subword in word.split("-"):
-            if subword.lower() in cfg.known_stresses:
-                subword = cfg.known_stresses[subword.lower()]
-            modified_subwords.append(word_uppercase_to_plus(subword))
+            if subword.lower() in cfg.no_stress:
+                modified_subwords.append(subword.lower())
+            else:
+                modified_subwords.append(word_uppercase_to_plus(subword))
         return "-".join(modified_subwords)
 
     word = word.lower()
@@ -83,6 +87,7 @@ def filelist_uppercase_to_plus(filelist_json, out_json):
     wavname_to_text = load_json(filelist_json)
 
     modified_wavname_to_text = {}
+    cnt_mistakes = 0
     for wavname in wavname_to_text:
         if "_processed" in wavname:
             modified_text = []
@@ -90,14 +95,18 @@ def filelist_uppercase_to_plus(filelist_json, out_json):
             for word in wavname_to_text[wavname].split():
                 if stress_ok(word):
                     modified_text.append(word_uppercase_to_plus(word))
+                else:
+                    all_sentence_ok = False
 
             if all_sentence_ok:
                 modified_wavname_to_text[wavname] = " ".join(modified_text)
+            else:
+                cnt_mistakes += 1
 
     dump_json(modified_wavname_to_text, out_json)
 
-    print("in %d texts stress notation were modified from uppercase to plus"\
-          % len(modified_wavname_to_text))
+    print("in %d texts stress notation were modified from uppercase to plus, %d have error in stress"\
+          % (len(modified_wavname_to_text), cnt_mistakes))
 
 
 def filelist_find_errors_in_stress(filelist_json, out_json):
@@ -119,7 +128,8 @@ def filelist_find_errors_in_stress(filelist_json, out_json):
 
 
 def main():
-    #
+    out_json = os.path.join(cfg.filelists_folder, "stress_part_plus_sign.json")
+    filelist_uppercase_to_plus(cfg.all_v3_json, out_json)
 
     pass
 
