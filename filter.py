@@ -65,31 +65,3 @@ def filter_filelist(filelist_json, wavs_duration, filtered_filelist_json=None, p
     print("        total:")
     print("              %d audios" % (long_cnt + short_cnt))
     print("              %.2f hours" % removed_duration)
-
-
-def main():
-    # # all_v3_asr_corrected_json = os.path.join(cfg.filelists_folder, "all_v3_asr_corrected.json")
-    # wavs_duration_json = os.path.join(cfg.filelists_folder, "wavs_duration.json")
-    # # get_wavs_duration(cfg.amai_path, wavs_duration_json)
-    # chopped_json = os.path.join(cfg.filelists_folder, "chopped.json")
-    # filter_filelist(chopped_json, wavs_duration_json, print_long_wavnames=True)
-    # # result_json = os.path.join(cfg.filelists_folder, "all_v3_asr_corrected_filtered.json")
-    # all_v4_with_chopped_asr_checked = os.path.join(cfg.filelists_folder, "all_v4_with_chopped_asr_checked.json")
-    # all_v4_with_chopped_asr_checked_filtered = os.path.join(cfg.filelists_folder, "all_v4_with_chopped_asr_checked_filtered.json")
-    all_v4_with_chopped_asr_checked_json = os.path.join(cfg.filelists_folder, "all_v4_with_chopped_asr_checked.json")
-    all_v4_with_chopped_asr_checked_filtered_json = os.path.join(cfg.filelists_folder, "all_v4_with_chopped_asr_checked_filtered.json")
-
-    filter_filelist(all_v4_with_chopped_asr_checked_json,
-                    cfg.wavs_duration_json,
-                    all_v4_with_chopped_asr_checked_filtered_json,
-                    print_long_wavnames=True)
-
-    count_filelist_duration(cfg.all_v3_json, cfg.wavs_duration_json)
-    count_filelist_duration(all_v4_with_chopped_asr_checked_json, cfg.wavs_duration_json)
-    count_filelist_duration(all_v4_with_chopped_asr_checked_filtered_json, cfg.wavs_duration_json)
-
-    pass
-
-
-if __name__ == "__main__":
-    main()

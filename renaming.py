@@ -65,9 +65,7 @@ def convert_names_filelist_txt_to_json(filelist_txt, out_json, wavnames_correspo
     dump_json(converted_filelist, out_json)
 
 
-def main():
-    pass
-
-
-if __name__ == "__main__":
-    main()
+def convert_names_filelist_json_to_json(filelist_json, out_json, wavnames_correspondence_json=None):
+    initial_filelist = load_json(filelist_json)
+    converted_filelist = convert_names_filelist_dict_to_dict(initial_filelist, wavnames_correspondence_json)
+    dump_json(converted_filelist, out_json)

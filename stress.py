@@ -109,12 +109,13 @@ def filelist_uppercase_to_plus(filelist_json, out_json):
           % (len(modified_wavname_to_text), cnt_mistakes))
 
 
-def filelist_find_errors_in_stress(filelist_json, out_json):
+def find_errors_in_stress(filelist_json, out_json=None, exclude_json={}):
     wavname_to_text = load_json(filelist_json)
+    exclude = load_json(exclude_json)
 
     errors = {}
     for wavname in wavname_to_text:
-        if "_processed" in wavname:
+        if "_processed" in wavname and wavname not in exclude:
             for word in wavname_to_text[wavname].split():
                 if not stress_ok(word):
                     if wavname in errors:
@@ -122,17 +123,7 @@ def filelist_find_errors_in_stress(filelist_json, out_json):
                     else:
                         errors[wavname] = {"text" : wavname_to_text[wavname], "errors" : [word]}
 
-    dump_json(errors, out_json)
+    if out_json is not None:
+        dump_json(errors, out_json)
 
     print(len(errors), "errors were found in stress marking")
-
-
-def main():
-    out_json = os.path.join(cfg.filelists_folder, "stress_part_plus_sign.json")
-    filelist_uppercase_to_plus(cfg.all_v3_json, out_json)
-
-    pass
-
-
-if __name__ == "__main__":
-    main()

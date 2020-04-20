@@ -28,11 +28,3 @@ def correct_multiple_txt_filelists(target_filelists_folder, out_folder):
 
     for filelist_txt in glob.glob(target_filelists_folder):
         correct_txt_filelist(filelist_txt, out_folder)
-
-
-def main():
-    pass
-
-
-if __name__ == '__main__':
-    main()

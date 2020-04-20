@@ -194,7 +194,7 @@ def dump_texts_only(filelist_json, out_json):
     dump_json(list(load_json(filelist_json).values()), out_json)
 
 
-def remove_wavnames_which_not_exist(filelist_json, dataset_path, out_json):
+def remove_wavnames_which_not_exist(filelist_json, dataset_path, out_json=None):
     print("\n" + "=" * 15 + " Removing non existing wavnames from filelist " + "=" * 15)
     print("Processing", os.path.basename(filelist_json), "\n")
     filelist = load_json(filelist_json)
@@ -207,20 +207,5 @@ def remove_wavnames_which_not_exist(filelist_json, dataset_path, out_json):
 
     print("\nRemoved %d wavnames in total, %d left" % (len(filelist) - len(result), len(result)))
     print("=" * 76)
-    dump_json(result, out_json)
-
-
-def main():
-    # filelist_json = os.path.join(cfg.filelists_folder, "stress_part_plus_sign.json")
-    # out_json = os.path.join(cfg.filelists_folder, "amai_stressed_texts_only.json")
-    # all_v4 = os.path.join(cfg.filelists_folder, "all_v4_with_chopped_long.json")
-    # all_asr_checked_v4 = os.path.join(cfg.filelists_folder, "all_v4_with_chopped_asr_checked.json")
-    # # dump_texts_only(filelist_json, out_json)
-    # remove_wavnames_which_not_exist(all_asr_checked_v4, cfg.amai_path, all_asr_checked_v4)
-    chopped_json = os.path.join(cfg.filelists_folder, "chopped.json")
-    count_filelist_duration(chopped_json, cfg.wavs_duration_json)
-    pass
-
-
-if __name__ == "__main__":
-    main()
+    if out_json is not None:
+        dump_json(result, out_json)

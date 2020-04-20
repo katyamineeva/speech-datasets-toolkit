@@ -156,12 +156,3 @@ def correct_mistakes_in_unchopped_filelist(unchopped_json, chopped_json, out_jso
 
     dump_json(result, out_json)
     print("%d mistakes found" % (len(unchopped) - len(result)))
-
-
-def main():
-
-    pass
-
-
-if __name__ == "__main__":
-    main()

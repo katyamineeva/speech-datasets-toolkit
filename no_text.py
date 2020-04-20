@@ -25,12 +25,3 @@ def find_no_texts(filelist_json, dataset_path, out_txt):
           .format(len(no_text_wavnames), total_wavs_cnt))
 
     return no_text_wavnames
-
-
-def main():
-    pass
-
-
-if __name__ == "__main__":
-    main()
-

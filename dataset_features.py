@@ -59,11 +59,3 @@ def get_amai_features(filelist_json):
     print("%2f sentences contains a colon" % (colons_cnt / texts_total))
     print("%2f sentences contains a semicolon" % (semicolons_cnt / texts_total))
     print("%2f sentences contains a dashes" % (exclamations_cnt / texts_total))
-
-
-def main():
-    pass
-
-
-if __name__ == "__main__":
-    main()
