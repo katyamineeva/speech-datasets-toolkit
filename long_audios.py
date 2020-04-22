@@ -156,3 +156,16 @@ def correct_mistakes_in_unchopped_filelist(unchopped_json, chopped_json, out_jso
 
     dump_json(result, out_json)
     print("%d mistakes found" % (len(unchopped) - len(result)))
+
+
+def exclude_wavs_with_one_sentence(in_json, out_json):
+    wavname_to_text = load_json(in_json)
+    result = {}
+    for wavname in wavname_to_text:
+        sentences_cnt = 0
+        for s in ".!?":
+            sentences_cnt += wavname_to_text[wavname].count(s)
+        if sentences_cnt > 1:
+            result[wavname] = wavname_to_text[wavname]
+
+    dump_json(result, out_json)
