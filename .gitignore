@@ -1,5 +1,8 @@
 *.wav
 config.py
+main.py
+.ipynb_checkpoints/
+.idea
 /.idea
 __pycache__
 amai
