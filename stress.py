@@ -21,7 +21,7 @@ def stress_ok(word):
     vowels_count = sum(map(word.lower().count, cfg.vowels_lower))
     uppercase_vowels_count = sum(map(word.count, cfg.vowels_upper))
 
-    if word.lower() in cfg.known_stresses:
+    if word.lower() in cfg.known_stresses or word.lower() in cfg.no_stress:
         return True
 
     if "-" in word:
@@ -116,14 +116,39 @@ def find_errors_in_stress(filelist_json, out_json=None, exclude_json={}):
     errors = {}
     for wavname in wavname_to_text:
         if "_processed" in wavname and wavname not in exclude:
+            modified_text = []
+            sentence_ok = True
             for word in wavname_to_text[wavname].split():
-                if not stress_ok(word):
+                if stress_ok(word):
+                    modified_text.append(word_uppercase_to_plus(word))
+                else:
+                    sentence_ok = False
+                    modified_text.append(word)
                     if wavname in errors:
                         errors[wavname]["errors"].append(word)
                     else:
-                        errors[wavname] = {"text" : wavname_to_text[wavname], "errors" : [word]}
+                        errors[wavname] = {"text": None, "errors" : [word]}
+
+            if not sentence_ok:
+                errors[wavname]["text"] = " ".join(modified_text)
 
     if out_json is not None:
         dump_json(errors, out_json)
 
     print(len(errors), "errors were found in stress marking")
+
+
+def find_unstressed_texts(filelist_json, out_json, exclude_json={}):
+    wavname_to_text = load_json(filelist_json)
+    exclude = load_json(exclude_json)
+
+    result = {}
+    for wavname in wavname_to_text:
+        if wavname not in exclude:
+            if "_processed" not in wavname:
+                result[wavname] = wavname_to_text[wavname]
+
+    if out_json is not None:
+        dump_json(result, out_json)
+
+    print(len(result), "unstreesed texts found")
