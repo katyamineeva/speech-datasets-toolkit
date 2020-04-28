@@ -135,9 +135,90 @@ def count_texts_wavs(dataset_path, filelist_json):
         .format(cnt_audios,cnt_texts, cnt_audios - cnt_texts))
 
 
+
+
+def remove_all_punctuation(text):
+    text = text.replace(".", " ")
+    text = text.replace(",", " ")
+    text = text.replace("!", " ")
+    text = text.replace("?", " ")
+    text = text.replace(":", " ")
+    text = text.replace(";", " ")
+    text = text.replace("\"", " ")
+    text = text.replace(" - ", " ")
+    text = text.replace("\\\"", " ")
+
+    return text
+
 def main():
+    out_json = os.path.join(cfg.ruslan_path, "all_v4_streed.json")
+    rename_filelist(cfg.all_v4_stressed_json, out_json)
     pass
 
 
 if __name__ == "__main__":
     main()
+
+
+def unify_text(text):
+    text = text.lower()
+    text = remove_all_punctuation(text)
+    text = text.replace("\n", " ")
+    text = text.replace("ё", "e")
+    text = " ".join(text.split())
+    # numbers ???
+
+    return text
+
+
+def remove_all_non_letters(text, remove_stress_sign=False, remove_hyphen=False):
+    do_not_remove_symbols = cfg.russian_letters
+    if not remove_hyphen:
+        do_not_remove_symbols += "-"
+    if not remove_stress_sign:
+        do_not_remove_symbols += cfg.stress_sign
+
+    symblos_in_text = set(list(text))
+    for s in symblos_in_text:
+        if s not in do_not_remove_symbols:
+            text = text.replace(s, " ")
+
+    return " ".join(text.split())
+
+
+def remove_zeros_dict_json(dict_json):
+    d = load_json(dict_json)
+    result = {}
+    for key in d:
+        if d[key] != 0:
+            result[key] = d[key]
+
+    dump_json(result, dict_json)
+
+
+def sum_two_dicts(d1, d2):
+    return {key: d1.get(key, 0) + d2.get(key, 0) for key in set(d1) | set(d2)}
+
+
+def sum_of_dicts(dicts):
+    result = {}
+    for d in dicts:
+        result = sum_two_dicts(result, d)
+
+    return result
+
+
+def unify_hyphens(filelist_json):
+    print("--------------------------------- unifying hyphens ---------------------------------\n")
+    wavname_to_text = load_json(filelist_json)
+    wrong_hyphens = ["‑"]
+    cnt_wrong_hyphens = 0
+    for wavname in wavname_to_text:
+        for s in wrong_hyphens:
+            assert s != cfg.hyphen_sign
+            if s in wavname_to_text[wavname]:
+                wavname_to_text[wavname] = wavname_to_text[wavname].replace(s, cfg.hyphen_sign)
+                cnt_wrong_hyphens += 1
+
+    dump_json(wavname_to_text, filelist_json)
+    print(f"processed {len(wavname_to_text)} texts, replaced {cnt_wrong_hyphens} wrong hyphens")

@@ -60,16 +60,3 @@ def wavs_in_one_folder(filelist_json, dataset_path, out_folder):
         src_path = os.path.join(dataset_path, wavname)
         dst_path = os.path.join(wavs_outpath, convert_filename(wavname))
         shutil.copyfile(src_path, dst_path)
-
-
-def main():
-
-    long_wavnames_to_list(cfg.amai_path, long_wavs_list_v2_json) #ignoreline    
-
-    # merge long wavs in one folder
-
-    # create filelist with new names
-
-
-if __name__ == "__main__":
-    main()

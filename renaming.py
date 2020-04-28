@@ -76,13 +76,3 @@ def rename_filelist(filelist_json, out_json):
         wavname_to_text[wav_id_to_wavname_ruslan(wav_id)] = wav_id_to_text[wav_id]
 
     dump_json(wavname_to_text, out_json)
-
-
-def main():
-    out_json = os.path.join(cfg.ruslan_path, "all_v4_streed.json")
-    rename_filelist(cfg.all_streesed_v4_json, out_json)
-    pass
-
-
-if __name__ == "__main__":
-    main()

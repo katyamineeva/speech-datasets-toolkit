@@ -27,11 +27,3 @@ def float_to_int16(rpath, wpath):
 
         soundfile.write(os.path.join(wpath, filename), y, sr, 'PCM_16')
     print()
-
-
-def main():
-
-
-
-if __name__ == "__main__":
-    main()

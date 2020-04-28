@@ -28,16 +28,3 @@ def sample_questions_non_questions_filelist(filelist_json, out_json):
 
 	dump_json(result, out_json)
 
-
-def main():
-	questions_non_questions_json = os.path.join(cfg.ruslan_path, "questions_non_questions_all.json")
-	sample_questions_non_questions_filelist(cfg.all_streesed_filtered_v4_json,
-											questions_non_questions_json)
-	questions_non_questions_folder = os.path.join(cfg.ruslan_path, "questions_non_questions_stressed")
-
-	train_val_split_json_to_txt(questions_non_questions_json, questions_non_questions_folder)
-
-
-
-if __name__ == "__main__":
-    main()

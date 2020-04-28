@@ -25,30 +25,6 @@ def recognise_speech(audio_path):
             return False
 
 
-def remove_all_punctuation(text):
-    text = text.replace(".", " ")
-    text = text.replace(",", " ")
-    text = text.replace("!", " ")
-    text = text.replace("?", " ")
-    text = text.replace(":", " ")
-    text = text.replace(";", " ")
-    text = text.replace("\"", " ")
-    text = text.replace(" - ", " ")
-    text = text.replace("\\\"", " ")
-
-    return text
-
-
-def unify_text(text):
-    text = text.lower()
-    text = remove_all_punctuation(text)
-    text = text.replace("\n", " ")
-    text = text.replace("ё", "e")
-    text = " ".join(text.split())
-    # numbers ???
-
-    return text
-
 
 def relative_levenstain(s1, s2):
     s1 = unify_text(s1)
@@ -94,13 +70,3 @@ def find_errors(distortions_path, errors_json):
            .format(len(errors), len(distortions), int(cfg.levenshtein_dist_threshold * 100)))
 
     dump_json(errors, errors_json)
-
-
-def main():
-
-
-    pass
-
-
-if __name__ == '__main__':
-    main()

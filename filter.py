@@ -19,7 +19,12 @@ def get_wavs_duration(wavs_path, out_json):
     return wavs_duration
 
 
-def filter_filelist(filelist_json, wavs_duration, filtered_filelist_json):
+def filter_filelist(filelist_json,
+                    wavs_duration,
+                    out_json=None,
+                    min_duration=cfg.min_duration,
+                    max_duration=cfg.max_duration,
+                    min_len=cfg.min_len):
     wavname_to_text = load_json(filelist_json)
     wavs_duration = load_json(wavs_duration)
 
@@ -28,24 +33,17 @@ def filter_filelist(filelist_json, wavs_duration, filtered_filelist_json):
     long_cnt = 0
 
     for wavname in wavname_to_text:
-        if cfg.min_duration < wavs_duration[wavname] < cfg.max_duration and len(wavname_to_text[wavname]) > cfg.min_len:
+        if min_duration < wavs_duration[wavname] < max_duration and len(wavname_to_text[wavname]) > min_len:
             filtered_wavename_to_text[wavname] = wavname_to_text[wavname]
-        if wavs_duration[wavname] < cfg.min_duration or len(wavname_to_text[wavname]) < cfg.min_len:
+        if wavs_duration[wavname] < min_duration or len(wavname_to_text[wavname]) < min_len:
             short_cnt += 1
-        if wavs_duration[wavname] > cfg.max_duration:
+        if wavs_duration[wavname] > max_duration:
             long_cnt += 1
 
-    dump_json(filtered_wavename_to_text, filtered_filelist_json)
+    if out_json is not None:
+        dump_json(filtered_wavename_to_text, out_json)
 
     print("Input: {} audios\nOutput: {} audios\nRemoved:\n    short: {}\n    long: {}\n    total: {}"
           .format(len(wavname_to_text), len(filtered_wavename_to_text), short_cnt, long_cnt, short_cnt + long_cnt))
 
-
-def main():
-    wavs_duration_json = os.path.join(cfg.ruslan_path, "wavs_duration.json")
-    filter_filelist(cfg.all_streesed_v4_json, wavs_duration_json, cfg.all_streesed_filtered_v4_json)
-    pass
-
-
-if __name__ == "__main__":
-    main()
+    return filtered_wavename_to_text
