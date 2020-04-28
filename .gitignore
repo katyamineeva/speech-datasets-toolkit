@@ -1,0 +1,5 @@
+*.wav
+.github_open_repo/
+.idea/
+.ipynb_checkpoints/
+__pycache__/
